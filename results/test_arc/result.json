@@ -1,0 +1,25 @@
+{
+  "results": {
+    "arc_challenge": {
+      "acc": 0.4,
+      "acc_stderr": 0.24494897427831783,
+      "acc_norm": 0.0,
+      "acc_norm_stderr": 0.0
+    }
+  },
+  "versions": {
+    "arc_challenge": 0
+  },
+  "config": {
+    "model": "hf-causal-experimental",
+    "model_args": "pretrained=meta-llama/Llama-2-13b-chat-hf,use_accelerate=True",
+    "num_fewshot": 0,
+    "batch_size": "2",
+    "batch_sizes": [],
+    "device": null,
+    "no_cache": true,
+    "limit": 5.0,
+    "bootstrap_iters": 100000,
+    "description_dict": {}
+  }
+}
