@@ -60,7 +60,7 @@ def main(args):
     script = get_script(args, prompts)
     launch_cmd(args, script)
     
-    print(f"=======Finish evaluate on {args.task}=======")
+    print(f"======= Finish evaluation on {args.task} =======")
     
         
     

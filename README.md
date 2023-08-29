@@ -16,8 +16,9 @@ A json file that contains keys 'system_prompt' and 'user_prompt'.
 ```
 
 # Quick Start
-## Environment
+## Install
 ```
+git clone --recursive https://github.com/FarnHua/Prompt-Benchmark.git
 cd lm-evaluation-harness
 pip install -e .
 ```
