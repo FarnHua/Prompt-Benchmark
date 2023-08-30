@@ -24,12 +24,12 @@ pip install -e .
 ```
 ## Test your prompts
 ```
-python3 evaluation.py --task <TASK> --output_path <OUTPUT_PATH> --prompts_file <PROMPT_FILE>
+python3 evaluation.py --task <TASK> --few_shot <FEW_SHOT> --output_path <OUTPUT_PATH> --prompts_file <PROMPT_FILE>
 ```
 * task: [arc_challenge, hellaswag, truthfulqa_mc, MMLU] 
 * output_path: The results and logs will be under the path: Prompt-Benchmark/results/output_path.
 
 ### Example: 
 ```
-python3 evaluation.py --task arc_challenge --output_path arc_test --prompts_file prompt.json
+python3 evaluation.py --task arc_challenge --few_shot 0 --output_path arc_test --prompts_file prompt.json
 ```

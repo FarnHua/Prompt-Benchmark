@@ -12,6 +12,7 @@ def parse_args():
     
     parser.add_argument("--task", type=str, required=True, 
                         choices=("arc_challenge", "hellaswag", "MMLU", "truthfulqa_mc"))
+    parser.add_argument("--few_shot", type=int, default=0)
     parser.add_argument("--output_path", type=str, default='test', help="a path to put result and log in ./results")
     parser.add_argument("--prompts_file", type=str, required=True, help="A json file containing key 'system_prompt' and 'user_prompt'. ")
     parser.add_argument("--results_file", type=str)
@@ -28,7 +29,7 @@ def get_script(args, prompts):
     else:
         task = args.task
     
-    cmd = f"bash {script} {task} {args.results_path} {args.prompts_file}"
+    cmd = f"bash {script} {task} {args.few_shot} {args.results_path} {args.prompts_file}"
     return cmd
 
 
