@@ -9,7 +9,9 @@ MMLU_TASKS = 'hendrycksTest-abstract_algebra,hendrycksTest-anatomy,hendrycksTest
 def parse_args():
     parser = argparse.ArgumentParser()
     
-    
+    parser.add_argument("--model_size", type=str, default='7b', 
+                        choices=('7b', '13b'),
+                        help='size of llama2 chat')
     parser.add_argument("--task", type=str, required=True, 
                         choices=("arc_challenge", "hellaswag", "MMLU", "truthfulqa_mc"))
     parser.add_argument("--few_shot", type=int, default=0)
@@ -28,8 +30,9 @@ def get_script(args, prompts):
         task = MMLU_TASKS
     else:
         task = args.task
-    
-    cmd = f"bash {script} {task} {args.few_shot} {args.results_path} {args.prompts_file}"
+    # TODO: add quantization config for llama2
+    model_args = f'pretrained=meta-llama/Llama-2-{args.model_size}-chat-hf,use_accelerate=True'
+    cmd = f"bash {script} {task} {model_args} {args.few_shot} {args.results_path} {args.prompts_file}"
     return cmd
 
 
