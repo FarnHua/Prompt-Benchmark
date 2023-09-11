@@ -18,6 +18,7 @@ def parse_args():
     parser.add_argument("--output_path", type=str, default='test', help="a path to put result and log in ./results")
     parser.add_argument("--prompts_file", type=str, required=True, help="A json file containing key 'system_prompt' and 'user_prompt'. ")
     parser.add_argument("--results_file", type=str)
+    parser.add_argument("--bnb_quantize", type=bool, default=False)
     args = parser.parse_args()
 
     return args
@@ -30,8 +31,21 @@ def get_script(args, prompts):
         task = MMLU_TASKS
     else:
         task = args.task
+
+    
+    model = f'pretrained=meta-llama/Llama-2-{args.model_size}-chat-hf'
+    use_accelerate='use_accelerate=True'
+    args_list = [model, use_accelerate]
+
     # TODO: add quantization config for llama2
-    model_args = f'pretrained=meta-llama/Llama-2-{args.model_size}-chat-hf,use_accelerate=True'
+    if args.bnb_quantize:
+        quant_args = "load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=bfloat16"
+        args_list.append(quant_args)
+        model_args = ','.join(args_list)
+    else:
+        model_args = ','.join(args_list)
+    
+    
     cmd = f"bash {script} {task} {model_args} {args.few_shot} {args.results_path} {args.prompts_file}"
     return cmd
 
