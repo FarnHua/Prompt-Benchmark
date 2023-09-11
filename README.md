@@ -40,10 +40,10 @@ python3 evaluation.py --task <TASK> --model_size <MODEL_SIZE> --few_shot <FEW_SH
 ### Example: 
 Run ARC on ```meta/Llama-2-7b-chat-hf```
 ```
-python3 evaluation.py --task arc_challenge --model_size 7b --few_shot 0 --output_path arc_test --prompts_file prompt.json
+python3 evaluation.py --task arc_challenge --model_size 7b --few_shot 25 --output_path arc_test --prompts_file prompt.json
 ```
 
 Run ARC on ```meta/Llama-2-13b-chat-hf``` with quantization 
 ```
-python3 evaluation.py --task arc_challenge --model_size 13b --few_shot 0 --output_path arc_test_quant --prompts_file prompt.json --bnb_quantize True
+python3 evaluation.py --task arc_challenge --model_size 13b --few_shot 25 --output_path arc_test_quant --prompts_file prompt.json --bnb_quantize True
 ```
