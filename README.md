@@ -6,7 +6,7 @@ We have created the Prompt Benchmark for four tasks, following the [Open LLM Lea
 * TruthfulQA 
 * MMLU
 
-We measure prompts on [meta/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) in Prompt Benchmark.
+We measure prompts on [meta/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) in [Prompt Benchmark]().
 
 # Prompts file
 A json file that contains keys 'system_prompt' and 'user_prompt'.
@@ -30,7 +30,13 @@ python3 evaluation.py --task <TASK> --model_size <MODEL_SIZE> --few_shot <FEW_SH
 ```
 * task: Current support 4 tasks: arc_challenge, hellaswag, truthfulqa_mc, MMLU 
 * output_path: The results and logs will be under the path: Prompt-Benchmark/results/output_path.
-* bnb_quantize: If set ```True```, use bitsandbytes to quantize model, default ```False```.
+* bnb_quantize: If set ```True```, use following config to quantize model, default ```False```. 
+    ```
+    load_in_4bit=True,
+    bnb_4bit_quant_type='nf4',
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16
+    ```
 ### Example: 
 Run ARC on ```meta/Llama-2-7b-chat-hf```
 ```
