@@ -35,7 +35,7 @@ python3 evaluation.py --task <TASK> --model_size <MODEL_SIZE> --few_shot <FEW_SH
     load_in_4bit=True,
     bnb_4bit_quant_type='nf4',
     bnb_4bit_use_double_quant=True,
-    bnb_4bit_compute_dtype=torch.bfloat16
+    bnb_4bit_compute_dtype=torch.float16
     ```
 ### Example: 
 Run ARC on ```meta/Llama-2-7b-chat-hf```

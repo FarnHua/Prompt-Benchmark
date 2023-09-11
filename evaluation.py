@@ -39,11 +39,10 @@ def get_script(args, prompts):
 
     # TODO: add quantization config for llama2
     if args.bnb_quantize:
-        quant_args = "load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=bfloat16"
+        quant_args = "load_in_4bit=True,bnb_4bit_quant_type='nf4',bnb_4bit_use_double_quant=True,bnb_4bit_compute_dtype=float16"
         args_list.append(quant_args)
-        model_args = ','.join(args_list)
-    else:
-        model_args = ','.join(args_list)
+    model_args = ','.join(args_list)
+    
     
     
     cmd = f"bash {script} {task} {model_args} {args.few_shot} {args.results_path} {args.prompts_file}"
