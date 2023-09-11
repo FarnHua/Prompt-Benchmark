@@ -28,11 +28,16 @@ pip install -e .
 ```
 python3 evaluation.py --task <TASK> --model_size <MODEL_SIZE> --few_shot <FEW_SHOT> --output_path <OUTPUT_PATH> --prompts_file <PROMPT_FILE>
 ```
-* task: [arc_challenge, hellaswag, truthfulqa_mc, MMLU] 
+* task: Current support 4 tasks: arc_challenge, hellaswag, truthfulqa_mc, MMLU 
 * output_path: The results and logs will be under the path: Prompt-Benchmark/results/output_path.
-
+* bnb_quantize: If set ```True```, use bitsandbytes to quantize model, default ```False```.
 ### Example: 
-Run ARC on meta/Llama-2-7b-chat-hf
+Run ARC on ```meta/Llama-2-7b-chat-hf```
 ```
 python3 evaluation.py --task arc_challenge --model_size 7b --few_shot 0 --output_path arc_test --prompts_file prompt.json
+```
+
+Run ARC on ```meta/Llama-2-13b-chat-hf``` with quantization 
+```
+python3 evaluation.py --task arc_challenge --model_size 13b --few_shot 0 --output_path arc_test_quant --prompts_file prompt.json --bnb_quantize True
 ```
