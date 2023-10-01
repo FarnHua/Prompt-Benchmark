@@ -38,7 +38,7 @@ python3 evaluation.py --task <TASK> --model_size <MODEL_SIZE> --few_shot <FEW_SH
     bnb_4bit_compute_dtype=torch.float16
     ```
 ### Script for verifying prompts in our leaderboard
-We will verify your submitted prompt using the following script. The ```few_shot``` argument with be **25, 10, 0, 5** for **ARC, Hellaswag, TruthfulQA and MMLU** as in the [Open LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard).
+We will verify submitted prompts using the following script. The ```few_shot``` argument with be **25, 10, 0, 5** for **ARC, Hellaswag, TruthfulQA and MMLU** as in the [Open LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard).
 ```
 python3 evaluation.py --task <TASK> --model_size 13b --few_shot <FEW_SHOT> --output_path <OUTPUT_PATH> --prompts_file <PROMPT_FILE>
 ```
