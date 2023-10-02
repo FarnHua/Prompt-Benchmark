@@ -28,8 +28,6 @@ def create_llm_input(data, demo_template, prompt_template, subsample_num) :
     for i in range(len(subsampled_data)) :
         for j in range(len(subsampled_data[i])) :
             tmp = subsampled_data[i][j]
-            # import pdb
-            # pdb.set_trace()
             if tmp[-1] == 1 :
                 demo = demo + demo_template.replace('[INPUT]', tmp[0]).replace('[OUTPUT]', tmp[1])
                 break
