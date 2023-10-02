@@ -6,3 +6,5 @@ lm_cache
 
 *.egg-info/
 results/
+log/
+test/
