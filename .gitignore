@@ -1,1 +1,13 @@
 results/
+log/
+hand_crafted_prompts/
+ape/log/
+
+env
+*.pyc
+data/
+lm_cache
+.idea
+
+*.egg-info/
+results/
