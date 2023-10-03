@@ -17,7 +17,6 @@ class bot(nn.Module):
         model.config.pad_token_id = self.tokenizer.eos_token_id
         self.lm = model
         self.lm.eval()
-        
         self.generation_args = dict(temperature=0.0, max_new_tokens=256, repetition_penalty=1.1, output_scores=True, return_dict_in_generate=True)
 
     def get_prompt(self, sentence, system_prompt=None):

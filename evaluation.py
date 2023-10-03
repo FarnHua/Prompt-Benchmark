@@ -75,6 +75,7 @@ def main(args):
     assert (('system_prompt' in prompts) and ('user_prompt' in prompts))
     
     script = get_script(args, prompts)
+   
     launch_cmd(args, script)
     
     print(f"======= Finish evaluation on {args.task} =======")
