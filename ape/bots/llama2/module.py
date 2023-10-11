@@ -11,6 +11,7 @@ class bot(nn.Module):
 
         model_name = 'meta-llama/Llama-2-7b-chat-hf'
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.tokenizer.pad_token = self.tokenizer.eos_token
         model = AutoModelForCausalLM.from_pretrained(model_name,
                                                     device_map="auto", 
                                                     torch_dtype=torch.float16)
