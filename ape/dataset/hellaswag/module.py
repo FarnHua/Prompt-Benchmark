@@ -31,7 +31,3 @@ class dataset() :
         eval_data = [ret[i]for i in range(len(ret)) if i not in indices]
 
         return prompt_gen_data, eval_data, []
-        
-
-Dataset = dataset(10)
-a, b, c = Dataset.get_data()

@@ -85,11 +85,11 @@ def main():
             if args.tasks is None:
                 task_names = tasks.ALL_TASKS
             else:
-                task_names = utils.pattern_match(args.tasks.split(","), tasks.ALL_TASKS)
+                task_names = utils.pattern_match(task.split(","), tasks.ALL_TASKS)
 
             system_prompt = ''
             user_prompt = prompts[j]
-
+            
             description_dict = {}
             results = evaluator.simple_evaluate(
                 model=args.model,
@@ -118,7 +118,7 @@ def main():
             elif args.tasks in ['hellaswag'] :
                 score = results['results']['hellaswag']['acc_norm']
                 tmp_dict['reward'] = score
-                
+
             elif args.tasks in ['MMLU'] :
                 accs = []
                 for key in results['results']:

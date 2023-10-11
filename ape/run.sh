@@ -1,10 +1,8 @@
-# export HF_DATASETS_CACHE=/work/u5273929/huggingface_hub
-
 mkdir -p test
 python main.py \
     --model hf-causal-experimental \
     --model_args 'pretrained=meta-llama/Llama-2-7b-chat-hf' \
-    --tasks MMLU \
+    --tasks arc_challenge \
     --num_fewshot 0 \
     --batch_size 2 \
     --limit 50 \
