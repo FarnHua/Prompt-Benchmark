@@ -16,6 +16,9 @@ from lm_eval import tasks, evaluator, utils
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
+MMLU_TASKS = 'hendrycksTest-abstract_algebra,hendrycksTest-anatomy,hendrycksTest-astronomy,hendrycksTest-business_ethics,hendrycksTest-clinical_knowledge,hendrycksTest-college_biology,hendrycksTest-college_chemistry,hendrycksTest-college_computer_science,hendrycksTest-college_mathematics,hendrycksTest-college_medicine,hendrycksTest-college_physics,hendrycksTest-computer_security,hendrycksTest-conceptual_physics,hendrycksTest-econometrics,hendrycksTest-electrical_engineering,hendrycksTest-elementary_mathematics,hendrycksTest-formal_logic,hendrycksTest-global_facts,hendrycksTest-high_school_biology,hendrycksTest-high_school_chemistry,hendrycksTest-high_school_computer_science,hendrycksTest-high_school_european_history,hendrycksTest-high_school_geography,hendrycksTest-high_school_government_and_politics,hendrycksTest-high_school_macroeconomics,hendrycksTest-high_school_mathematics,hendrycksTest-high_school_microeconomics,hendrycksTest-high_school_physics,hendrycksTest-high_school_psychology,hendrycksTest-high_school_statistics,hendrycksTest-high_school_us_history,hendrycksTest-high_school_world_history,hendrycksTest-human_aging,hendrycksTest-human_sexuality,hendrycksTest-international_law,hendrycksTest-jurisprudence,hendrycksTest-logical_fallacies,hendrycksTest-machine_learning,hendrycksTest-management,hendrycksTest-marketing,hendrycksTest-medical_genetics,hendrycksTest-miscellaneous,hendrycksTest-moral_disputes,hendrycksTest-moral_scenarios,hendrycksTest-nutrition,hendrycksTest-philosophy,hendrycksTest-prehistory,hendrycksTest-professional_accounting,hendrycksTest-professional_law,hendrycksTest-professional_medicine,hendrycksTest-professional_psychology,hendrycksTest-public_relations,hendrycksTest-security_studies,hendrycksTest-sociology,hendrycksTest-us_foreign_policy,hendrycksTest-virology,hendrycksTest-world_religions'
+
+
 def create_llm_input(data, demo_template, prompt_template, subsample_num) :
     '''
     input : sentence, templates. 
@@ -42,10 +45,13 @@ def main():
     parser = ArgumentParser()
     args  = set_arguments(parser)
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    ### get dataset and bot
     dataset =importlib.import_module(".module",f"dataset.{args.tasks}").dataset
     Dataset = dataset(args.prompt_gen_size)
+    if args.tasks == 'MMLU' :
+        task = MMLU_TASKS
+    else :
+        task = args.tasks
+    ### get dataset and bot
     bot = importlib.import_module(".module",f"bots.llama2").bot
     Bot = bot({})
 
@@ -100,7 +106,7 @@ def main():
                 check_integrity=args.check_integrity,
                 write_out=args.write_out,
                 output_base_path=args.output_base_path,
-                use_prompt=user_prompt,
+                use_prompt=args.use_prompt,
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
                 prompt_gen_indices=prompt_gen_indices
@@ -112,9 +118,14 @@ def main():
             elif args.tasks in ['hellaswag'] :
                 score = results['results']['hellaswag']['acc_norm']
                 tmp_dict['reward'] = score
+                
             elif args.tasks in ['MMLU'] :
-                score = results['results']['hellaswag']['acc']
+                accs = []
+                for key in results['results']:
+                    accs.append(results['results'][key]['acc'])
+                score = np.mean(accs)
                 tmp_dict['reward'] = score
+
             elif args.tasks in ['arc-challenge'] :
                 score = results['results']['arc-challenge']['acc_norm']
                 tmp_dict['reward'] = score
@@ -149,7 +160,7 @@ def set_arguments(parser):
     
     # parser.add_argument("--model", required=True)
     # parser.add_argument("--model_args", default="")
-    parser.add_argument("--tasks", default=None, choices=utils.MultiChoice(tasks.ALL_TASKS))
+    parser.add_argument("--tasks", default=None)#, choices=utils.MultiChoice(tasks.ALL_TASKS))
     parser.add_argument("--provide_description", action="store_true")
     parser.add_argument("--num_fewshot", type=int, default=0)
     parser.add_argument("--batch_size", type=str, default=None)
