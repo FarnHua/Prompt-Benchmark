@@ -19,8 +19,6 @@ class dataset() :
             for i in range(len(x['mc2_targets']['choices'])) : 
                 tmp.append([x['question'], x['mc2_targets']['choices'][i], x['mc2_targets']['labels'][i]])
             ret.append(tmp)
-            import pdb
-            pdb.set_trace()
         
         indices = random.sample(range(len(ret)), self.prompt_gen_size)
         
@@ -29,6 +27,3 @@ class dataset() :
 
         return prompt_gen_data, eval_data, indices
         
-
-Dataset = dataset(10)
-a, b, c = Dataset.get_data()
