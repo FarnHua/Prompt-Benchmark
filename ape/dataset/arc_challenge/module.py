@@ -5,7 +5,7 @@ import random
 
 class dataset() :
     def __init__(self, prompt_gen_data): 
-        self.data = load_dataset("ai2_arc", 'ARC-Challenge', split='train')
+        self.data = load_dataset("ai2_arc", 'ARC-Challenge', split='validation')
         self.prompt_gen_size = prompt_gen_data
 
     def get_data(self):
