@@ -100,7 +100,7 @@ def main():
                 check_integrity=args.check_integrity,
                 write_out=args.write_out,
                 output_base_path=args.output_base_path,
-                use_prompt=args.use_prompt,
+                use_prompt=user_prompt,
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
                 prompt_gen_indices=prompt_gen_indices
