@@ -1,26 +1,11 @@
-#!/bin/sh
-#SBATCH --job-name=RL-MM
-#SBATCH --nodes=1
-#SBATCH --gres=gpu:2
-#SBATCH --mem=40G
-#SBATCH --account=GOV112004
-#SBATCH --partition=gpNCHC_LLM
-#SBATCH -o ./logs/MM
-#SBATCH --ntasks-per-node=1
-
-
-module purge
-module load miniconda3
-conda activate llm-eval
-
 python main.py \
     --mode finetune \
     --prompt GPT2 \
     --agent ppo_lm \
     --pretrain_data_path ./pretrain_data/netflix_train_key.csv \
-    --model_name farnhua/gpt2-small-netflix \
+    --model_name farnhua/gpt2-small-self_instruct_human_eval\
     --dataset example \
-    --exp_name MM-test-small-netflix \
+    --exp_name MM-test-small-instruct \
     --log_interval 5\
     --seed 42 \
     --bz 4 \
@@ -32,7 +17,7 @@ python main.py \
     --max_pt_len 30 \
     --inner_lr 9e-5 \
     --lm_lr 0.0 \
-    --save_path MM-test-small-netflix \
+    --save_path MM-test-small-instruct \
     --save_interval 10 \
     --wandb disabled \
     --bot hf-causal-experimental \
