@@ -8,9 +8,6 @@
 #SBATCH -o ./logs/MM
 #SBATCH --ntasks-per-node=1
 
-export TRANSFORMERS_CACHE=/work/u5273929/huggingface_hub
-export HF_DATASETS_CACHE=/work/u5273929/huggingface_hub
-export HUGGINGFACE_HUB_CACHE=/work/u5273929/huggingface_hub
 
 module purge
 module load miniconda3

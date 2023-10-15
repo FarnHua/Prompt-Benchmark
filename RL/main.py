@@ -36,7 +36,7 @@ def main():
         print("which mode do you want to use: finetune / test")
         raise
     
-    wandb.init(mode=args.wandb, project='bias_phase1', name=args.exp_name, entity="chatbot_ntu")
+    wandb.init(mode=args.wandb, project='promptbenchmark-RL', name=args.exp_name, entity='chatbot_ntu')
     wandb.config.update(args)
 
     agent = importlib.import_module('.module', f"agents.{args.agent}").agent
@@ -50,7 +50,7 @@ def main():
     Agent = agent(args, Prompt, dataloader)
 
     pbar = tqdm(range(args.end_step))
-    batch = 0
+    step = 0
 
     # for inputs_id, mask, ll in pbar:
     for _ in pbar:
@@ -60,12 +60,12 @@ def main():
         total_mse = 0
         total_pg = 0
         total_entropy = 0
-        batch +=1
+        step +=1
          
         task_bar =tqdm(total=args.sample_time*args.k_epoch,position=1,leave=True)
         task_bar.set_description(desc=f"None, epoch: 0, score:{round(0.0, 3)}, loss:{round(0.0, 5)}",refresh=True)
         
-        if batch <= args.end_step:
+        if step <= args.end_step:
             sample_dicts = []
             scores = []
             ## use input to sample data
@@ -131,41 +131,56 @@ def main():
                 Prompt.state_network.zero_grad()
 
                 
-                tqdm.write(f"outerloss in batch {batch}: {round(total_loss/args.bz, 4)}")
-                tqdm.write(f"outerscore in batch {batch}: {round(total_score/args.bz, 4)}")
-                if args.log_wandb != 'disabled':
-                    Agent.log_wandb(scores, total_loss, total_mse, total_pg, total_entropy, batch)
+                tqdm.write(f"outerloss in step {step}: {round(total_loss/args.bz, 4)}")
+                tqdm.write(f"outerscore in step {step}: {round(total_score/args.bz, 4)}")
+                if args.wandb != 'disabled':
+                    Agent.log_wandb(scores, total_loss, total_mse, total_pg, total_entropy, step)
             else:
                 total_scores = []
                 for flatten_dict in sample_dicts:
                     total_scores.append(flatten_dict)
                 if args.log_wandb != 'disabled':
-                    Agent.log_wandb(total_scores, 0, 0, 0, 0, batch)
+                    Agent.log_wandb(total_scores, 0, 0, 0, 0, step)
+            
+            if args.write_json:
+                
+                dest = f"results/{args.save_path}/"
+                os.makedirs(dest, exist_ok=True)
+                write_path = f'results/{args.save_path}/prompt_score.json'
+                records = []
+                for score in scores:
+                    
+                    for i in range(args.bz):
+                        records.append(
+                            {   
+                                'step': step,
+                                'loss': total_loss,
+                                'prompt': score['model_response'][i],
+                                'score': score['predict_list'][i]
+                            }
+                        )
 
-            if batch % args.save_interval == 0:
+                with open(write_path, 'a') as njs:
+                    json.dump(records, njs, indent=4)
+                    
+            if step % args.save_interval == 0:
                 
                 if args.mode == 'test':
 
                     dest = f"results/{args.save_path}/"
                     os.makedirs(dest, exist_ok=True)
-                    with open(f'results/{args.save_path}/checkpoint-step-{batch}-output.txt', 'w') as f:
+                    with open(f'results/{args.save_path}/checkpoint-step-{step}-output.txt', 'w') as f:
                         for flatten_dict in sample_dicts:
-                            bot_response=flatten_dict['conversation']
                             prompt=flatten_dict['model_response']
-                            input_sentence=flatten_dict['input_string']
-                            for i in range(len(bot_response)):
-                                sample_splits = bot_response[i][0]
-                                sample_bots = bot_response[i][1]
+                            for i in range(len(prompt)):
                                 sample_prompt = prompt[i]
-                                f.write(sample_prompt + ". 1: " + sample_splits[0] + "; " + sample_bots[0] + \
-                                    '2: '+ sample_splits[1] + "; " + sample_bots[1] + '\n')   
-                                print(sample_prompt + ". 1: " + sample_splits[0] + "; " + sample_bots[0] + \
-                                    '2: '+ sample_splits[1] + "; " + sample_bots[1])
+                                f.write(sample_prompt)   
+                                print(sample_prompt)
                 else:
 
-                    if batch in [1, 50, 80, 100, 120, 150, 200, 300]:
+                    if step in [10, 50, 100, 120, 150, 200, 300]:
 
-                        dest = f"results/{args.save_path}/"
+                        dest = f"results/{args.save_path}"
                         os.makedirs(dest, exist_ok=True)
                         
                         save_args = deepcopy(args)
@@ -173,16 +188,15 @@ def main():
                         with open(f'{dest}/args.txt', 'w') as f:
                             json.dump(save_args.__dict__, f, indent=2)
 
-                        torch.save(
-                            {k: (v.cpu() if v is not None else None)  # save to cpu tensors
-                                for k, v in Prompt.model.state_dict().items()},
-                            join(f'results/{args.save_path}/',
-                                    f'checkpoint-step-{batch}-prompt.pkl'))
+                        model_dest = f'results/{args.save_path}/step{step}'
+                        os.makedirs(model_dest, exist_ok=True)
+                        
+                        Prompt.model.save_pretrained(model_dest)
+                        Prompt.tokenizer.save_pretrained(model_dest)
                         torch.save(
                             {k: (v.cpu() if v is not None else None)  # save to cpu tensors
                                 for k, v in Prompt.state_network.state_dict().items()},
-                            join(f'results/{args.save_path}/',
-                                    f'checkpoint-step-{batch}-value.pkl'))
+                            join(model_dest,f'checkpoint-value.pkl'))
                         
         
 
@@ -219,11 +233,10 @@ def set_arguments(parser):
     parser.add_argument('--update_demo', dest='update_demo', action='store_true')
     parser.add_argument('--no-update_demo', dest='update_demo', action='store_false')
     parser.set_defaults(update_demo=True)
-    parser.add_argument('--init_step', type=str, default="")
     parser.add_argument('--top_k', type=int, default=50)
     parser.add_argument('--top_p', type=float, default=.9)
-    # parser.add_argument('--extra_label', type=str, default='train_word_list.txt')
     parser.add_argument("--wandb", type=str, default='enabled')
+    parser.add_argument("--write_json", type=bool, default=True)
     
     ## lm-evaluation
     parser.add_argument("--bot", required=True, default='hf-causal-experimental')

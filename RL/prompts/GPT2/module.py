@@ -4,6 +4,7 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPT2Config
 from torch.optim import AdamW
 from copy import deepcopy
 from os.path import exists
+import os
 
 class prompt():
     def __init__(self, config):
@@ -17,28 +18,24 @@ class prompt():
 
         if config.model_ckpt != '':
 
-            print(f"[Load LM from saved point]: the original path: results/{config.model_ckpt}/checkpoint-step-{self.args.init_step}-prompt.pkl")
-            print(f"[Load VM from saved point]: the original path: results/{config.model_ckpt}/checkpoint-step-{self.args.init_step}-value.pkl")
-            self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium', bos_token='<|startoftext|>',eos_token='<|endoftext|>', pad_token='<|pad|>')
-            self.model = GPT2LMHeadModel.from_pretrained("gpt2-medium")
-            self.model.resize_token_embeddings(len(self.tokenizer))
-            self.model.load_state_dict(torch.load("./results/" + config.model_ckpt + f"/checkpoint-step-{self.args.init_step}-prompt.pkl"))
-    
-
-            self.model_demo = GPT2LMHeadModel.from_pretrained("gpt2-medium")
-            self.model_demo.resize_token_embeddings(len(self.tokenizer))
-            self.model_demo.load_state_dict(torch.load("./results/" + config.model_ckpt + f"/checkpoint-step-{self.args.init_step}-prompt.pkl"))
-
-            self.state_network.load_state_dict(torch.load("results/" + config.model_ckpt + f"/checkpoint-step-{self.args.init_step}-value.pkl"))
-            self.state_network_demo.load_state_dict(torch.load("results/" + config.model_ckpt + f"/checkpoint-step-{self.args.init_step}-value.pkl"))
-
+            print('Loading from checkpoint ...')
+            self.tokenizer = GPT2Tokenizer.from_pretrained(config.model_ckpt)
+            self.model = GPT2LMHeadModel.from_pretrained(config.model_ckpt, config=self.configuration)
+            self.model_demo = GPT2LMHeadModel.from_pretrained(config.model_ckpt, config=self.configuration)
+            
+            self.state_network.load_state_dict(torch.load(os.path.join(config.model_ckpt, 'checkpoint-value.pkl')))
+            self.state_network_demo.load_state_dict(torch.load(os.path.join(config.model_ckpt, 'checkpoint-value.pkl')))
+            print("Finish loading from checkpoint.")
+            
         else:
-            self.configuration = GPT2Config.from_pretrained('gpt2-medium')
-            self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium', bos_token='<|startoftext|>', eos_token='<|endoftext|>', pad_token='<|pad|>')  
-            self.model = GPT2LMHeadModel.from_pretrained(config.model_name)
-            self.model_demo = GPT2LMHeadModel.from_pretrained(config.model_name)
-            self.model.resize_token_embeddings(len(self.tokenizer))
-            self.model_demo.resize_token_embeddings(len(self.tokenizer))
+            # self.configuration = GPT2Config.from_pretrained('gpt2-medium')
+            # self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium', bos_token='<|startoftext|>', eos_token='<|endoftext|>', pad_token='<|pad|>')  
+            self.tokenizer = GPT2Tokenizer.from_pretrained(config.model_name)
+            self.model = GPT2LMHeadModel.from_pretrained(config.model_name, config=self.configuration)
+            self.model_demo = GPT2LMHeadModel.from_pretrained(config.model_name, config=self.configuration)
+            # self.model.resize_token_embeddings(len(self.tokenizer))
+            # self.model_demo.resize_token_embeddings(len(self.tokenizer))
+            
             
         self.optim_param = list(self.model.named_parameters())
         no_decay = ['bias', 'ln']   # no decay for bias and LayerNorm (ln)
@@ -60,4 +57,12 @@ class prompt():
         
         self.model_demo.eval()
         self.state_network_demo.eval()
+        # self.save_to_hf()
+        
+    def save_to_hf(self):
+        print('Start pushing model.')
+        self.model_demo.push_to_hub('bias_gpt2-m')
+        self.tokenizer.push_to_hub('bias_gpt2-m')
+        print("Finish pushing model.")
+        
     

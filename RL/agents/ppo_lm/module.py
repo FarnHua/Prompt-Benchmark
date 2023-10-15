@@ -11,6 +11,7 @@ import json
 import sys
 sys.path.append('../../lm_eval')
 from lm_eval import tasks, evaluator, utils
+
 class agent(nn.Module):
 
     def __init__(self, config, prompt, ptx_dataloader):
@@ -32,7 +33,7 @@ class agent(nn.Module):
         self.top_k = TopKLogitsWarper(top_k=self.top_k)
         self.pretrain_dataloader = ptx_dataloader
         self.ptx_loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
-        self.table = wandb.Table(columns=['step', 'prompt', 'prompt1', 'response1', 'prompt2', 'response2', 'abs_diff'])
+        self.table = wandb.Table(columns=['step', 'task_name', 'prompt', 'score'])
 
         if config.tasks is None:
             task_names = tasks.ALL_TASKS
@@ -40,6 +41,12 @@ class agent(nn.Module):
             task_names = utils.pattern_match(config.tasks.split(","), tasks.ALL_TASKS)
 
         print(f"Selected Tasks: {task_names}")
+        
+        ## Only MMLU has more than one task in PromptBenchmark
+        if len(task_names) > 1:
+            self.task_name = 'MMLU'
+        else:
+            self.task_name = task_names[0]
         
         lm, task_dict = evaluator.simple_evaluate(
                                     model=config.bot,
@@ -52,7 +59,6 @@ class agent(nn.Module):
                                     no_cache=config.no_cache)
         self.lm = lm
         self.task_dict = task_dict
-        
         
 
     def sample_forward(self, model, state_net, device=torch.device('cuda:0')):
@@ -120,15 +126,6 @@ class agent(nn.Module):
                 
         model_response = [self.prompt.tokenizer.decode(x, skip_special_tokens=True) for x in temp_sen]
 
-        bot_response = []
-        
-        
-        # bot_response.extend(self.bot.make_response(model_response))
-        conversation = []
-        print_conv = []
-
-
-        
         predict_list = self.get_reward(model_response)
         
         score = 0
@@ -136,7 +133,6 @@ class agent(nn.Module):
         step = 0
         for s in predict_list:
             score += s
-
             tempscore.append(s)
         score_emo = np.array(tempscore)
         
@@ -159,7 +155,6 @@ class agent(nn.Module):
                         'flatten_rewards': flatten_rewards,
                         'eos_index': eos_index,
                         'score': score,
-                        "conversation":conversation,
                         "predict_list":predict_list,
                         "model_response":model_response,
                         'classify_reward': score_emo
@@ -272,6 +267,7 @@ class agent(nn.Module):
             lm_loss = outputs['loss']
             loss = lm_loss * self.args.lm_lr  + (1- self.args.lm_lr) * loss
             
+            
         flatten_dict["length"] = length_list
     
        
@@ -321,19 +317,31 @@ class agent(nn.Module):
 
     def get_reward(self, prompts):
         
-        scores = []
-        for prompt in prompts:
-            results = evaluator.evaluate(
-                lm=self.lm,
-                task_dict=self.task_dict,
-                num_fewshot=self.args.num_fewshot,
-                limit=self.args.limit,
-                write_out=False,
-                system_prompt='',
-                user_prompt=prompt
-            )['results']
-            
-            scores.append(results['arc_challenge']['acc_norm'])
+        with torch.no_grad():
+            scores = []
+            for prompt in prompts:
+                results = evaluator.evaluate(
+                    lm=self.lm,
+                    task_dict=self.task_dict,
+                    num_fewshot=self.args.num_fewshot,
+                    limit=self.args.limit,
+                    write_out=False,
+                    system_prompt='',
+                    user_prompt=prompt
+                )['results']
+                
+                if self.task_name in ['truthfulqa_mc'] :
+                    scores.append(results['truthfulqa_mc']['mc2'])
+                    
+                elif self.task_name in ['hellaswag'] :
+                    scores.append(results['hellaswag']['acc_norm'])
+                    
+                elif self.task_name in ['MMLU'] :
+                    tmp = [results[key]['acc'] for key in results]
+                    scores.append(np.mean(tmp))
+                    
+                elif self.task_name in ['arc_challenge'] :
+                    scores.append(results['arc_challenge']['acc_norm'])
         return scores
 
 
@@ -355,21 +363,18 @@ class agent(nn.Module):
                     'outerscore': training_score / self.args.bz / meta_total, \
                     'lm_loss': lm_loss / meta_total}, \
                     step=batch)
-        if batch % 20 == 1:
+        if batch % 2 == 0:
             for flatten_dict in flatten_dicts:
-                bot_response=flatten_dict['conversation']
                 prompt=flatten_dict['model_response']
                 predict_list=flatten_dict['predict_list']
-                for i in range(len(bot_response)):
-                    sample_splits = bot_response[i][0]
-                    sample_bots = bot_response[i][1]
+                for i in range(len(prompt)):
                     sample_prompt = prompt[i]
-                    abs_diff = predict_list[i]
-                    self.table.add_data(batch, sample_prompt, sample_splits[0], sample_bots[0], sample_splits[1], sample_bots[1], abs_diff)
+                    score = predict_list[i]
+                    self.table.add_data(batch, self.task_name, sample_prompt, score)
                     
             
             new_table = wandb.Table(
                 columns=self.table.columns, data=self.table.data
             )
-            wandb.log({"conversation": new_table})
+            wandb.log({"prompt_score": new_table})
             

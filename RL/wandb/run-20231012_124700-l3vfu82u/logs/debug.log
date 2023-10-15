@@ -1,0 +1,28 @@
+2023-10-12 12:47:00,132 INFO    MainThread:947 [wandb_setup.py:_flush():76] Current SDK version is 0.15.11
+2023-10-12 12:47:00,132 INFO    MainThread:947 [wandb_setup.py:_flush():76] Configure stats pid to 947
+2023-10-12 12:47:00,132 INFO    MainThread:947 [wandb_setup.py:_flush():76] Loading settings from /home/u5273929/.config/wandb/settings
+2023-10-12 12:47:00,132 INFO    MainThread:947 [wandb_setup.py:_flush():76] Loading settings from /work/u5273929/Prompt-Benchmark/RL/wandb/settings
+2023-10-12 12:47:00,132 INFO    MainThread:947 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2023-10-12 12:47:00,132 INFO    MainThread:947 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2023-10-12 12:47:00,132 INFO    MainThread:947 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'RL/main.py', 'program_abspath': '/work/u5273929/Prompt-Benchmark/RL/main.py', 'program': '/work/u5273929/Prompt-Benchmark/RL/main.py'}
+2023-10-12 12:47:00,133 INFO    MainThread:947 [wandb_init.py:_log_setup():528] Logging user logs to /work/u5273929/Prompt-Benchmark/RL/wandb/run-20231012_124700-l3vfu82u/logs/debug.log
+2023-10-12 12:47:00,133 INFO    MainThread:947 [wandb_init.py:_log_setup():529] Logging internal logs to /work/u5273929/Prompt-Benchmark/RL/wandb/run-20231012_124700-l3vfu82u/logs/debug-internal.log
+2023-10-12 12:47:00,133 INFO    MainThread:947 [wandb_init.py:init():568] calling init triggers
+2023-10-12 12:47:00,133 INFO    MainThread:947 [wandb_init.py:init():575] wandb.init called with sweep_config: {}
+config: {}
+2023-10-12 12:47:00,133 INFO    MainThread:947 [wandb_init.py:init():618] starting backend
+2023-10-12 12:47:00,133 INFO    MainThread:947 [wandb_init.py:init():622] setting up manager
+2023-10-12 12:47:00,137 INFO    MainThread:947 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2023-10-12 12:47:00,139 INFO    MainThread:947 [wandb_init.py:init():628] backend started and connected
+2023-10-12 12:47:00,145 INFO    MainThread:947 [wandb_init.py:init():720] updated telemetry
+2023-10-12 12:47:00,155 INFO    MainThread:947 [wandb_init.py:init():753] communicating run to backend with 90.0 second timeout
+2023-10-12 12:47:00,844 INFO    MainThread:947 [wandb_run.py:_on_init():2220] communicating current version
+2023-10-12 12:47:01,117 INFO    MainThread:947 [wandb_run.py:_on_init():2229] got version response upgrade_message: "wandb version 0.15.12 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2023-10-12 12:47:01,117 INFO    MainThread:947 [wandb_init.py:init():804] starting run threads in backend
+2023-10-12 12:47:08,446 INFO    MainThread:947 [wandb_run.py:_console_start():2199] atexit reg
+2023-10-12 12:47:08,446 INFO    MainThread:947 [wandb_run.py:_redirect():2054] redirect: wrap_raw
+2023-10-12 12:47:08,446 INFO    MainThread:947 [wandb_run.py:_redirect():2119] Wrapping output streams.
+2023-10-12 12:47:08,446 INFO    MainThread:947 [wandb_run.py:_redirect():2144] Redirects installed.
+2023-10-12 12:47:08,446 INFO    MainThread:947 [wandb_init.py:init():845] run started, returning control to user process
+2023-10-12 12:47:08,447 INFO    MainThread:947 [wandb_run.py:_config_callback():1324] config_cb None None {'task': 'none', 'agent': 'ppo_lm', 'config': 'example', 'prompt': 'GPT2', 'dataset': 'example', 'pretrain_data_path': './pretrain_data/ChatGPT.csv', 'mode': 'finetune', 'exp_name': 'tru-test2', 'save_path': 'tru-test2', 'model_ckpt': '', 'model_name': '/work/u5273929/bias-ppo/gpt2_finetune/gpt2-m/gpt2-m-ChatGPT/checkpoint-2985', 'ratio': 4, 'log_interval': 5, 'save_interval': 10, 'seed': 42, 'bz': 2, 'k_epoch': 3, 'discount_r': 1.0, 'end_step': 60, 'sample_time': 1, 'inner_lr': 9e-06, 'outer_lr': 1e-05, 'max_pt_len': 30, 'mse_lr': 1, 'ep_lr': 1.0, 'eps_clip': 0.2, 'coh_r': 0.01, 'lm_lr': 0.1, 'num_testing': 1, 'update_demo': True, 'init_step': '0', 'top_k': 50, 'top_p': 0.9, 'wandb': 'online', 'bot': 'hf-causal-experimental', 'bot_args': 'pretrained=meta-llama/Llama-2-7b-chat-hf,use_accelerate=True', 'tasks': 'truthful_qa', 'provide_description': False, 'num_fewshot': 0, 'limit': 40.0, 'data_sampling': None, 'no_cache': True, 'check_integrity': False, 'device': 'cuda:0'}

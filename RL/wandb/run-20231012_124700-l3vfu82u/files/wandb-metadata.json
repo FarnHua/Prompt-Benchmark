@@ -1,0 +1,288 @@
+{
+    "os": "Linux-3.10.0-1127.el7.x86_64-x86_64-with-glibc2.17",
+    "python": "3.10.12",
+    "heartbeatAt": "2023-10-12T04:47:01.145224",
+    "startedAt": "2023-10-12T04:47:00.127242",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--mode",
+        "finetune",
+        "--prompt",
+        "GPT2",
+        "--agent",
+        "ppo_lm",
+        "--pretrain_data_path",
+        "./pretrain_data/ChatGPT.csv",
+        "--model_name",
+        "/work/u5273929/bias-ppo/gpt2_finetune/gpt2-m/gpt2-m-ChatGPT/checkpoint-2985",
+        "--dataset",
+        "example",
+        "--exp_name",
+        "tru-test2",
+        "--log_interval",
+        "5",
+        "--seed",
+        "42",
+        "--bz",
+        "2",
+        "--ep_lr",
+        "1.0",
+        "--k_epoch",
+        "3",
+        "--discount_r",
+        "1.0",
+        "--end_step",
+        "60",
+        "--sample_time",
+        "1",
+        "--max_pt_len",
+        "30",
+        "--inner_lr",
+        "9e-6",
+        "--lm_lr",
+        "0.1",
+        "--init_step",
+        "0",
+        "--save_path",
+        "tru-test2",
+        "--save_interval",
+        "10",
+        "--wandb",
+        "online",
+        "--bot",
+        "hf-causal-experimental",
+        "--bot_args",
+        "pretrained=meta-llama/Llama-2-7b-chat-hf,use_accelerate=True",
+        "--tasks",
+        "truthful_qa",
+        "--limit",
+        "40",
+        "--num_fewshot",
+        "0",
+        "--no_cache"
+    ],
+    "state": "running",
+    "program": "/work/u5273929/Prompt-Benchmark/RL/main.py",
+    "codePathLocal": "main.py",
+    "codePath": "RL/main.py",
+    "git": {
+        "remote": "https://github.com/FarnHua/Prompt-Benchmark.git",
+        "commit": "2e275933d884afb666851a4ab0be2b82de54c208"
+    },
+    "email": "alhena.farn@gmail.com",
+    "root": "/work/u5273929/Prompt-Benchmark",
+    "host": "gn1101.twcc.ai",
+    "username": "u5273929",
+    "executable": "/home/u5273929/.conda/envs/llm-eval/bin/python",
+    "cpu_count": 36,
+    "cpu_count_logical": 36,
+    "cpu_freq": {
+        "current": 3000.0,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 218.40111923217773,
+            "used": 8.607250213623047
+        }
+    },
+    "gpu": "Tesla V100-SXM2-32GB",
+    "gpu_count": 2,
+    "gpu_devices": [
+        {
+            "name": "Tesla V100-SXM2-32GB",
+            "memory_total": 34089730048
+        },
+        {
+            "name": "Tesla V100-SXM2-32GB",
+            "memory_total": 34089730048
+        }
+    ],
+    "memory": {
+        "total": 754.3754539489746
+    }
+}

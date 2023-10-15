@@ -1,0 +1,5 @@
+logs/*
+lm_cache/*
+*.pyc
+results/*
+train.sh

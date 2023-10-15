@@ -254,7 +254,7 @@ class HuggingFaceAutoLM(BaseLM):
                 load_in_4bit=load_in_4bit,
             )
         self.model.eval()
-        torch.set_grad_enabled(False)
+        # torch.set_grad_enabled(False)
 
         self._device = device
         if use_accelerate and "lm_head" in self.model.hf_device_map:
