@@ -3,3 +3,4 @@ lm_cache/*
 *.pyc
 results/*
 train.sh
+wandb/*
