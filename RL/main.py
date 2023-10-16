@@ -179,25 +179,23 @@ def main():
                                 print(sample_prompt)
                 else:
 
-                    if step in [10, 50, 100, 120, 150, 200, 300]:
+                    dest = f"results/{args.save_path}"
+                    os.makedirs(dest, exist_ok=True)
+                    
+                    save_args = deepcopy(args)
+                    del save_args.device
+                    with open(f'{dest}/args.txt', 'w') as f:
+                        json.dump(save_args.__dict__, f, indent=2)
 
-                        dest = f"results/{args.save_path}"
-                        os.makedirs(dest, exist_ok=True)
-                        
-                        save_args = deepcopy(args)
-                        del save_args.device
-                        with open(f'{dest}/args.txt', 'w') as f:
-                            json.dump(save_args.__dict__, f, indent=2)
-
-                        model_dest = f'results/{args.save_path}/step{step}'
-                        os.makedirs(model_dest, exist_ok=True)
-                        
-                        Prompt.model.save_pretrained(model_dest)
-                        Prompt.tokenizer.save_pretrained(model_dest)
-                        torch.save(
-                            {k: (v.cpu() if v is not None else None)  # save to cpu tensors
-                                for k, v in Prompt.state_network.state_dict().items()},
-                            join(model_dest,f'checkpoint-value.pkl'))
+                    model_dest = f'results/{args.save_path}/step{step}'
+                    os.makedirs(model_dest, exist_ok=True)
+                    
+                    Prompt.model.save_pretrained(model_dest)
+                    Prompt.tokenizer.save_pretrained(model_dest)
+                    torch.save(
+                        {k: (v.cpu() if v is not None else None)  # save to cpu tensors
+                            for k, v in Prompt.state_network.state_dict().items()},
+                        join(model_dest,f'checkpoint-value.pkl'))
                         
         
 
