@@ -118,14 +118,14 @@ class agent(nn.Module):
         ##########################################################################################
         eos_index = [len(temp_sen[0]) for j in range(len(temp_sen))]
         
-        end_index = 50256
+        end_index = self.prompt.tokenizer.eos_token_id
+        
         for j in range(len(temp_sen)):
             if end_index in temp_sen[j]:
                 eos_index[j] = temp_sen[j].index(end_index)
                 temp_sen[j] = temp_sen[j][:eos_index[j]]
                 
         model_response = [self.prompt.tokenizer.decode(x, skip_special_tokens=True) for x in temp_sen]
-
         predict_list = self.get_reward(model_response)
         
         score = 0
