@@ -5,7 +5,7 @@ python main.py \
     --pretrain_data_path ./pretrain_data/self_instruct_instruction.csv \
     --model_name farnhua/gpt2-small-self_instruct_human_eval\
     --dataset example \
-    --exp_name MM-test-small-instruct \
+    --exp_name arc_test \
     --log_interval 5\
     --seed 42 \
     --bz 4 \
@@ -17,12 +17,12 @@ python main.py \
     --max_pt_len 30 \
     --inner_lr 9e-5 \
     --lm_lr 0.0 \
-    --save_path MM-test-small-instruct \
+    --save_path arc_test \
     --save_interval 10 \
     --wandb disabled \
     --bot hf-causal-experimental \
     --bot_args pretrained=meta-llama/Llama-2-7b-chat-hf,use_accelerate=True \
-    --tasks MMLU \
+    --tasks arc_challenge \
     --limit 20 \
     --num_fewshot 0 \
     --no_cache
